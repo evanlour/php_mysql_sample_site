@@ -1,0 +1,218 @@
+CREATE DATABASE resupply;
+USE resupply;
+
+CREATE TABLE Department(
+D_ID INT NOT NULL,
+D_num_of_emp INT NOT NULL,
+D_name VARCHAR(40) NOT NULL,
+PRIMARY KEY(D_ID)
+);
+
+CREATE TABLE Employee(
+E_ID INT NOT NULL,
+E_salary INT NOT NULL,
+E_name VARCHAR(40) NOT NULL,
+E_cur_dep_ID INT NOT NULL,
+PRIMARY KEY (E_ID),
+FOREIGN KEY (E_cur_dep_ID) REFERENCES Department(D_ID)
+);
+
+CREATE TABLE Consulting_company(
+C_email VARCHAR(40) NOT NULL,
+C_name VARCHAR(40) NOT NULL,
+C_location VARCHAR(40),
+PRIMARY KEY (C_email)
+);
+
+CREATE TABLE Analyst(
+A_ID INT NOT NULL,
+A_name VARCHAR(40) NOT NULL,
+PRIMARY KEY (A_ID)
+);
+
+CREATE TABLE Product(
+P_ID INT NOT NULL,
+P_price FLOAT NOT NULL,
+P_quantity INT NOT NULL,
+P_name VARCHAR(40) NOT NULL,
+PRIMARY KEY (P_ID)
+);
+
+CREATE TABLE Supplier(
+S_name VARCHAR(40) NOT NULL,
+S_is_temp INT,
+PRIMARY KEY (S_name)
+);
+
+CREATE TABLE Cooperates(
+Sup_name VARCHAR(40) NOT NULL,
+Dep_ID INT NOT NULL,
+PRIMARY KEY(Sup_name, Dep_ID),
+FOREIGN KEY (Sup_name) REFERENCES Supplier(S_name),
+FOREIGN KEY (Dep_ID) REFERENCES Department(D_ID)
+);
+
+CREATE TABLE Consults(
+Company_email VARCHAR(40) NOT NULL,
+Department_ID INT NOT NULL,
+PRIMARY KEY(Company_email, Department_ID),
+FOREIGN KEY (Company_email) REFERENCES Consulting_company(C_email),
+FOREIGN KEY (Department_ID) REFERENCES Department(D_ID)
+);
+
+CREATE TABLE Provides(
+Supplier_name VARCHAR(40) NOT NULL,
+Product_ID INT NOT NULL,
+PRIMARY KEY(Supplier_name, Product_ID),
+FOREIGN KEY (Supplier_name) REFERENCES Supplier(S_name),
+FOREIGN KEY (Product_ID) REFERENCES Product(P_ID)
+);
+
+CREATE TABLE Analyzes_for(
+Analyst_ID INT NOT NULL,
+Com_email VARCHAR(40) NOT NULL,
+PRIMARY KEY(Analyst_ID, Com_email),
+FOREIGN KEY (Analyst_ID) REFERENCES Analyst(A_ID),
+FOREIGN KEY (Com_email) REFERENCES Consulting_company(C_email)
+);
+
+INSERT INTO Department (D_ID, D_num_of_emp, D_name) VALUES
+(10000, 1, 'Clay figurines Department'),
+(10001, 1, 'Tobacco products Department'),
+(10002, 1, 'Alcoholic beverages Department'),
+(10003, 1, 'Clothing Department'),
+(10004, 1, 'Smuggled electronics Department'),
+(10005, 1, 'Construction materials Departmen');
+
+INSERT INTO Employee (E_ID, E_salary, E_name, E_cur_dep_ID) VALUES
+(20000, 2800.00, 'Samuel Adams', 10000),
+(20001, 2800.00, 'Chloe Green', 10000),
+(20002, 10000.00, 'John Doe', 10000),
+(20003, 4000.00, 'Sergio Perez', 10001),
+(20004, 850.00, 'Daniel Wright', 10001),
+(20005, 1600.00, 'Michael Scott', 10002),
+(20006, 5000.00, 'Elijah Walker', 10002),
+(20007, 2200.00, 'Harper Robinson', 10003),
+(20008, 1900.00, 'Henry Martin', 10003),
+(20009, 980.00, 'Charlotte Jackson', 10004),
+(20010, 16000.00, 'Michael Scott', 10004),
+(20011, 5000.00, 'Elijah Walker', 10004),
+(20012, 2200.00, 'Harper Robinson', 10004),
+(20013, 1900.00, 'Henry Martin', 10004),
+(20014, 980.00, 'Lebeto Vergos', 10005);
+
+INSERT INTO Product (P_ID, P_price, P_quantity, P_name) VALUES
+(30000, 3.45, 1000, 'broken figurine'),
+(30001, 19200.00, 200, 'John Hon motorsport car miniature'),
+(30002, 123.00, 3000, 'Vault 364 figurine'),
+(30003, 12.00, 3000, 'Chinese figurine'),
+(30004, 3.00, 300, 'Tequila'),
+(30005, 2378.00, 40, 'Traditional russian vodka'),
+(30006, 3549.00, 19, 'Common rum'),
+(30007, 10.00, 33400, 'Jack Daniels'),
+(30008, 765.00, 430, 'Bergina beer'),
+(30009, 22.00, 2500, 'Ghastly yellow jacket'),
+(30010, 3.45, 1000, 'Melbourne taxi driver suit'),
+(30011, 15200.00, 200, 'Michigan Bougatsatzhs hat'),
+(30012, 123.00, 3000, 'Black Hoodie'),
+(30013, 24.00, 9000, 'CRT TV'),
+(30014, 12.00, 2000, 'Arduino'),
+(30015, 2378.00, 40, 'Broken Iphone'),
+(30016, 3549.00, 19, 'Controller'),
+(30017, 10.00, 33400, 'Old Laptop'),
+(30018, 765.00, 430, 'Steel Pipe'),
+(30019, 22.00, 2500, 'Concrete');
+
+INSERT INTO Consulting_company (C_name, C_location, C_email) VALUES
+('SmartStock Advisors', 'Australia', 'team@smartstockadvisors.com'),
+('OptimalBuy Strategies', 'Greece', 'inquiries@optimalbuy.com'),
+('ProcurIQ Analytics', 'Brazil', 'support@procuriq.com'),
+('SupplySense Partners', 'China', 'hello@supplysense.com');
+
+INSERT INTO Analyst (A_id, A_name) VALUES
+(50000, 'Olivia Martinez'),
+(50001, 'Ethan Johnson'),
+(50002, 'Sophia Williams'),
+(50003, 'Liam Brown'),
+(50004, 'Emma Davis'),
+(50005, 'Noah Wilson');
+
+INSERT INTO Supplier (S_name, S_is_temp) VALUES
+('Liora Aspen', 1),
+('Kaelion Vance', 0),
+('Seren Ilani', 0),
+('Marek Solis', 1),
+('Amara Blythe', 0),
+('Daxon Levant', 0),
+('Elira Caine', 0),
+('Torian Locke', 0),
+('Sandman Joe', 0),
+('Mary steel', 1);
+
+INSERT INTO Cooperates(Sup_name, Dep_ID) VALUES
+('Liora Aspen', 10000),
+('Kaelion Vance', 10000),
+('Seren Ilani', 10001),
+('Marek Solis', 10002),
+('Amara Blythe', 10003),
+('Daxon Levant', 10004),
+('Elira Caine', 10004),
+('Torian Locke', 10004),
+('Sandman Joe', 10005),
+('Mary steel', 10005);
+
+INSERT INTO Consults(Company_email, Department_ID) VALUES
+('team@smartstockadvisors.com', 10000),
+('team@smartstockadvisors.com', 10002),
+('team@smartstockadvisors.com', 10003),
+('team@smartstockadvisors.com', 10001),
+('inquiries@optimalbuy.com', 10001),
+('inquiries@optimalbuy.com', 10003),
+('support@procuriq.com', 10004),
+('hello@supplysense.com', 10005);
+
+INSERT INTO Analyzes_for(Com_email, Analyst_ID) VALUES
+('team@smartstockadvisors.com', 50000),
+('team@smartstockadvisors.com', 50001),
+('inquiries@optimalbuy.com', 50000),
+('inquiries@optimalbuy.com', 50001),
+('support@procuriq.com', 50002),
+('support@procuriq.com', 50003),
+('support@procuriq.com', 50004),
+('hello@supplysense.com', 50005);
+
+INSERT INTO Provides(Supplier_name, Product_ID) VALUES
+('Liora Aspen', 30000),
+('Liora Aspen', 30001),
+('Liora Aspen', 30002),
+('Marek Solis', 30004),
+('Marek Solis',30005),
+('Kaelion Vance', 30006),
+('Seren Ilani', 30007),
+('Seren Ilani', 30008),
+('Seren Ilani', 30009),
+('Seren Ilani', 30010),
+('Amara Blythe', 30011),
+('Daxon Levant', 30012),
+('Daxon Levant', 30013),
+('Amara Blythe',30014),
+('Daxon Levant', 30015),
+('Elira Caine', 30016),
+('Torian Locke', 30017),
+('Sandman Joe', 30018),
+('Mary steel', 30019);
+
+CREATE TABLE SiteUsers(
+S_name VARCHAR(40) NOT NULL,
+S_surname VARCHAR(40) NOT NULL,
+S_username VARCHAR(40) NOT NULL,
+S_email VARCHAR(40) NOT NULL,
+S_password VARCHAR(512) NOT NULL,
+PRIMARY KEY(S_email)
+);
+
+ALTER TABLE SiteUsers 
+ADD COLUMN token VARCHAR(64) NULL,
+ADD COLUMN token_expiry INT NULL,
+ADD COLUMN ip_address VARCHAR(45) NULL,
+ADD COLUMN user_agent TEXT NULL;
