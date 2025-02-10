@@ -8,12 +8,14 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$postProductName = $_POST['prodRem'];
+$post_product_ID = $_POST['prodRem'] ?? '';
 
-$sql = "DELETE FROM Product WHERE '$postProductName'=P_name;";
+$sql = "DELETE FROM Product WHERE P_ID=?;";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $post_product_ID);
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Registeration successful.']);
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Product removed successfully.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

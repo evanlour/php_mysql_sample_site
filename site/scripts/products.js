@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const remProd = document.getElementById('removeProductOption');
     productOptionData.forEach(product => {
         const option = document.createElement('option');
-        option.value = product.P_name; // Set the value to the department ID
+        option.value = product.P_ID; // Set the value to the department ID
         option.textContent = product.P_name; // Display the department name
         remProd.appendChild(option);
     });
