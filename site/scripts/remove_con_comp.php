@@ -8,14 +8,20 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$conCompEmail = $_POST['conCompEmail'];
+$con_comp_email = $_POST['conCompEmail'] ?? '';
 
-$sql1 = "DELETE FROM Consulting_company WHERE '$conCompEmail'=C_email;";
-$sql2 = "DELETE FROM Analyzes_for WHERE '$conCompEmail'=Com_email;";
-$sql3 = "DELETE FROM Consults WHERE '$conCompEmail'=Company_email;";
+$sql1 = "DELETE FROM Consulting_company WHERE C_email=?;";
+$sql2 = "DELETE FROM Analyzes_for WHERE Com_email=?;";
+$sql3 = "DELETE FROM Consults WHERE Company_email=?;";
+$stmt1 = $conn->prepare($sql1);
+$stmt2 = $conn->prepare($sql2);
+$stmt3 = $conn->prepare($sql3);
+$stmt1->bind_param("s", $con_comp_email);
+$stmt2->bind_param("s", $con_comp_email);
+$stmt3->bind_param("s", $con_comp_email);
 
-if(mysqli_query($conn, $sql1) && mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)){
-    echo json_encode(['success' => true, 'message' => 'Registeration successful.']);
+if($stmt1->execute() && $stmt2->execute() && $stmt3->execute()){
+    echo json_encode(['success' => true, 'message' => 'Consulting Company removed successfully.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

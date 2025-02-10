@@ -8,14 +8,17 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$postName = $_POST['conCompName'];
-$postEmail = $_POST['conCompEmail'];
-$postLocation = $_POST['conCompLocation'];
+$post_name = $_POST['conCompName'] ?? '';
+$post_email = $_POST['conCompEmail'] ?? '';
+$post_location = $_POST['conCompLocation'] ?? '';
 
-$sql = "INSERT INTO Consulting_company (C_name, C_email, C_location) VALUES ('$postName', '$postEmail', '$postLocation');";
+$sql = "INSERT INTO Consulting_company (C_name, C_email, C_location) VALUES (?, ?, ?);";
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Registeration successful.']);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sss", $post_name, $post_email, $post_location);
+
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Added.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

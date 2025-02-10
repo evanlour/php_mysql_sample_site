@@ -8,13 +8,15 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$supplierName = $_POST['supplierName'];
-$supplierSeasonality = $_POST['supplierSeasonality'];
+$supplier_name = $_POST['supplierName'] ?? '';
+$supplier_seasonality = $_POST['supplierSeasonality'] ?? '';
 
-$sql = "INSERT INTO Supplier (S_name, S_is_temp) VALUES ('$supplierName', '$supplierSeasonality');";
+$sql = "INSERT INTO Supplier (S_name, S_is_temp) VALUES (?, ?);";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $supplier_name, $supplier_seasonality);
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Supplier added successfully.']);
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Added.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

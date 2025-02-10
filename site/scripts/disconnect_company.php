@@ -8,13 +8,14 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$departmentID = $_POST['departmentID'];
-$companyEmail = $_POST['companyEmail'];
+$department_ID = $_POST['departmentID'] ?? '';
+$company_email = $_POST['companyEmail'] ?? '';
 
-$sql = "DELETE FROM Consults WHERE '$departmentID'=Department_ID AND '$companyEmail'=Company_email;";
-
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Analyst connected to company.']);
+$sql = "DELETE FROM Consults WHERE Department_ID=? AND Company_email=?;";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("is", $department_ID, $company_email);
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Connection removed.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

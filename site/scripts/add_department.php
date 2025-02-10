@@ -7,14 +7,17 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     header("Location: ../login.php");
     exit();
 }
-$postDepartmentName = $_POST['depAddName'];
-$postDepartmentID = $_POST['depAddID'];
-$postDepartmentNum = $_POST['depNum'];
+$post_department_name = $_POST['depAddName'] ?? '';
+$post_department_ID = $_POST['depAddID'] ?? '';
+$post_department_num = $_POST['depNum'] ?? '';
 
-$sql = "INSERT INTO Department (D_name, D_ID, D_num_of_emp) VALUES ('$postDepartmentName', '$postDepartmentID', '$postDepartmentNum');";
+$sql = "INSERT INTO Department (D_name, D_ID, D_num_of_emp) VALUES (?, ?, ?);";
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Department Added.']);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sii", $post_department_name, $post_department_ID, $post_department_num);
+
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Added.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

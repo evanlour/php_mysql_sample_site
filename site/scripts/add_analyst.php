@@ -8,13 +8,16 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$analystName = $_POST['analystName'];
-$analystID = $_POST['analystID'];
+$analyst_name = $_POST['analystName'] ?? '';
+$analyst_ID = $_POST['analystID'] ?? '';
 
-$sql = "INSERT INTO Analyst (A_name, A_ID) VALUES ('$analystName', '$analystID');";
+$sql = "INSERT INTO Analyst (A_name, A_ID) VALUES (?, ?);";
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Registeration successful.']);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $analyst_name, $analyst_ID);
+
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Added.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

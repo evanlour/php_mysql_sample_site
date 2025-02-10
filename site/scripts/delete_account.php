@@ -7,10 +7,12 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     header("Location: ../login.php");
     exit();
 }
-$currentUser = $_SESSION["user_id"];
-$sql = "DELETE FROM SiteUsers WHERE S_username = '$currentUser'";
+$current_user = $_SESSION["user_id"] ?? '';
+$sql = "DELETE FROM SiteUsers WHERE S_username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $current_user);
 
-if(mysqli_query($conn, $sql)){
+if($stmt->execute()){
     session_unset(); // Unset all session variables
     session_destroy(); // Destroy the session
     $conn->close();

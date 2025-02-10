@@ -34,7 +34,6 @@ loginButton.addEventListener('click', function(event){
 
   .then(response => response.json()) // Process the server's response
     .then(data => {
-      console.log(data);
         if (data.success) {
             alert('Login successful!');
             // Redirect or perform actions for successful login

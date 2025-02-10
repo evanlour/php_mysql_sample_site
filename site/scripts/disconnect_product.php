@@ -8,12 +8,13 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$supplierName = $_POST['supplierName'];
-$productID = $_POST['productID'];
+$supplier_name = $_POST['supplierName'] ?? '';
+$product_ID = $_POST['productID'] ?? '';
 
-$sql = "DELETE FROM Provides WHERE '$supplierName'=Supplier_name AND '$productID'=Product_ID";
-
-if(mysqli_query($conn, $sql)){
+$sql = "DELETE FROM Provides WHERE Supplier_name=? AND Product_ID=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $supplier_name, $product_ID);
+if($stmt->execute()){
     echo json_encode(['success' => true, 'message' => 'Connection Removed.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);

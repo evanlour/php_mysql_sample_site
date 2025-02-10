@@ -8,13 +8,16 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$companyEmail = $_POST['companyEmail'];
-$departmentID = $_POST['departmentID'];
+$company_email = $_POST['companyEmail'] ?? '';
+$department_ID = $_POST['departmentID'] ?? '';
 
-$sql = "INSERT INTO Consults (Company_email, Department_ID) VALUES ('$companyEmail', '$departmentID');";
+$sql = "INSERT INTO Consults (Company_email, Department_ID) VALUES (?, ?);";
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Analyst connected to company.']);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $company_email, $department_ID);
+
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Added.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

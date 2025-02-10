@@ -8,13 +8,16 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$supplierName = $_POST['supplierName'];
-$departmentID = $_POST['departmentID'];
+$supplier_name = $_POST['supplierName'] ?? '';
+$department_ID = $_POST['departmentID'] ?? '';
 
-$sql = "INSERT INTO Cooperates (Sup_name, DEP_ID) VALUES ('$supplierName', '$departmentID');";
+$sql = "INSERT INTO Cooperates (Sup_name, DEP_ID) VALUES (?, ?);";
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Connection Succesful.']);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $supplier_name, $department_ID);
+
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Added.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

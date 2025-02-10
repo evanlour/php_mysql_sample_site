@@ -25,18 +25,16 @@ document.getElementById("departmentOption").addEventListener('change', () => {
 
         .then(response => response.json())
             .then(data => {
-                data.forEach(row => {
-                    if(!existingDepartments.includes(row.D_name)){
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${row.D_name}</td>
-                            <td>${row.D_ID}</td>
-                            <td>${row.D_num_of_emp}</td>
-                        `;
-                        depDataBody.append(tr);
-                        existingDepartments.push(row.D_name);
-                    }
-                })
+                if(!existingDepartments.includes(data.D_name)){
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${data.D_name}</td>
+                        <td>${data.D_ID}</td>
+                        <td>${data.D_num_of_emp}</td>
+                    `;
+                    depDataBody.append(tr);
+                    existingDepartments.push(data.D_name);
+                }
             })
     }
 });

@@ -8,13 +8,15 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$supplierName = $_POST['supplierName'];
-$productID = $_POST['productID'];
+$supplier_name = $_POST['supplierName'] ?? '';
+$product_ID = $_POST['productID'] ?? '';
 
-$sql = "INSERT INTO Provides (Supplier_name, Product_ID) VALUES ('$supplierName', '$productID');";
+$sql = "INSERT INTO Provides (Supplier_name, Product_ID) VALUES (?, ?);";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $supplier_name, $product_ID);
 
-if(mysqli_query($conn, $sql)){
-    echo json_encode(['success' => true, 'message' => 'Connection Succesful.']);
+if($stmt->execute()){
+    echo json_encode(['success' => true, 'message' => 'Added.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
 }

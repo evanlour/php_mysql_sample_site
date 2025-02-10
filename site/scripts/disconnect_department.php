@@ -8,12 +8,14 @@ if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $allowed
     exit();
 }
 
-$supplierName = $_POST['supplierName'];
-$departmentID = $_POST['departmentID'];
+$supplier_name = $_POST['supplierName'] ?? '';
+$department_ID = $_POST['departmentID'] ?? '';
 
-$sql = "DELETE FROM Cooperates WHERE '$supplierName'=Sup_name AND '$departmentID'=Dep_ID";
+$sql = "DELETE FROM Cooperates WHERE Sup_name=? AND Dep_ID=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $supplier_name, $department_ID);
 
-if(mysqli_query($conn, $sql)){
+if($stmt->execute()){
     echo json_encode(['success' => true, 'message' => 'Connection Removed.']);
 }else{
     echo json_encode(['success' => false, 'message' => 'Server error. Please try again later.']);
